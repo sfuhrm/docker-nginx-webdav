@@ -69,5 +69,3 @@ services:
       - PASSWORD_FILE=/run/secrets/PASSWORD_SC
 
 ```
-
-(Inspired from https://github.com/jbbodart/alpine-nginx-webdav - but "upgraded" to debian-buster image with all WebDav functionality enabled to work perfectly with MacOS OSX and Windows 10)
