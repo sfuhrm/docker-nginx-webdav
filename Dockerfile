@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-LABEL maintainer="maltokyo"
+LABEL maintainer="sfuhrm"
 
 EXPOSE 80/tcp
 COPY entrypoint.sh /
