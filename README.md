@@ -1,6 +1,6 @@
-# Nginx WebDav Server (built from the official Nginx/Debian-Buster docker image)
+# Nginx WebDav Server (built from the small Alpine image)
 
-Incredibly secure, fast and light WebDav Server, built from Nginx official image - bare minimum with no bells and whistles.
+Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
 
 ## How to use this image
 ```console
