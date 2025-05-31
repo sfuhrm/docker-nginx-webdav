@@ -7,10 +7,10 @@
 Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
 
 > This is a fork of https://github.com/maltokyo/docker-nginx-webdav with the following changes:
-> * replacing the base image to Alpine Linux,
+> * replacing the base Debian image with Alpine Linux,
 > * improving the entrypoint script,
-> * reducing the image layers,
-> * adding Github Actions build / push with automatic daily image building
+> * reducing the image layers and size,
+> * adding Github Actions build / push with automatic daily image building.
 
 ## How to use this image
 ```console
