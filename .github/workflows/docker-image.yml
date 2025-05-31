@@ -24,16 +24,18 @@ jobs:
         docker run --name test1 -d -p8080:80 -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
 
         echo "Test with correct user / password"
-        RESULT=$(curl -I http://user:password@localhost:8080 | sed -e"s/\r//" | head -n1)
+        export RESULT=$(curl -I http://user:password@localhost:8080 | sed -e"s/\r//" | head -n1)
+        export EXPECTED="HTTP/1.1 200 OK"
         if [ "$RESULT" != "HTTP/1.1 200 OK" ]; then
-          echo "curl returned $RESULT, but HTTP 200 was expected"
+          echo "curl returned $RESULT, but $EXPECTED was expected"
           exit 5
         fi
 
         echo "Test with wrong user / password"
-        RESULT=$(curl -I http://localhost:8080 | sed -e"s/\r//" | head -n1)
+        export RESULT=$(curl -I http://localhost:8080 | sed -e"s/\r//" | head -n1)
+        export EXPECTED="HTTP/1.1 401 Unauthorized"
         if [ "$RESULT" != "HTTP/1.1 401 Unauthorized" ]; then
-          echo "curl returned $RESULT, but HTTP 401 was expected"
+          echo "curl returned $RESULT, but $EXPECTED was expected"
           exit 6
         fi
 
