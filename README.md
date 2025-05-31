@@ -49,7 +49,7 @@ secrets:
     file:  <path-to-your-secret>/password.secret.txt
 services:
   docker-nginx-webdav:
-    image: sfuhrm/docker-nginx-webdav
+    #image: sfuhrm/docker-nginx-webdav
     build: .
     container_name: webdav
     restart: unless-stopped
