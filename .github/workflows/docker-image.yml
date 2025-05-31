@@ -61,7 +61,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: docker-nginx-webdav:latest
+        images: docker-nginx-webdav
 
     - name: Build and push Docker image
       id: push
