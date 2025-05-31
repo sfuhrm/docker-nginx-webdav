@@ -22,6 +22,7 @@ jobs:
     - name: Test the image
       run: |
         docker run --name test1 -d -p8080:80 -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
+        docker ps
 
         echo "Test with correct user / password"
         export RESULT=$(curl -I http://user:password@localhost:8080 | sed -e"s/\r//" | head -n1)
