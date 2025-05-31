@@ -1,7 +1,7 @@
 version: '2'
 services:
   nginx_webdav:
-#    image: maltokyo/docker-nginx-webdav # comment out this line if you are building from source.
+#    image: sfuhrm/docker-nginx-webdav # comment out this line if you are building from source.
     build: . # comment out this line if you are just pulling the docker hub image.
 #    ports: # enable this if you are not using reverse proxy, otherwise leave commented out
 #      - "80:80"
