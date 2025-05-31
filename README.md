@@ -1,4 +1,4 @@
-# Nginx WebDav Server (built from the small Alpine image)
+# Nginx WebDav Server (built from the Alpine image)
 
 Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
 
