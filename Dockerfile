@@ -1,21 +1,18 @@
-FROM nginx:latest
+FROM alpine:latest
 
 LABEL maintainer="maltokyo"
 
-RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y nginx-extras apache2-utils
+EXPOSE 80/tcp
+COPY entrypoint.sh /
 
+RUN apk add nginx nginx-mod-http-dav-ext apache2-utils && \
+    mkdir -p "/media/data" && \
+    chown -R nginx:nginx "/media/data" && \
+    chmod +x /entrypoint.sh
 
-COPY webdav.conf /etc/nginx/conf.d/default.conf
-RUN rm /etc/nginx/sites-enabled/*
-
-
-RUN mkdir -p "/media/data"
-
-RUN chown -R www-data:www-data "/media/data"
+COPY webdav.conf /etc/nginx/http.d/default.conf
 
 VOLUME /media/data
 
-
-COPY entrypoint.sh /
-RUN chmod +x entrypoint.sh
-CMD /entrypoint.sh && nginx -g "daemon off;"
+ENTRYPOINT [ "/bin/sh", "/entrypoint.sh"]
+CMD [ "nginx",  "-g", "daemon off;" ]
