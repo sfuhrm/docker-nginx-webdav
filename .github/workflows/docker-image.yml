@@ -28,7 +28,7 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag docker-nginx-webdav:latest
 
-    - name: Test the image
+    - name: Test the image with env USERNAME/PASSWORD
       run: |
         docker run --name test1 -d -p8080:80 -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
         docker ps
@@ -59,6 +59,31 @@ jobs:
         cmp testfile testfile2 || exit 9
 
         docker kill test1
+
+    - name: Test the image with file USERNAME/PASSWORD
+      run: |
+        echo -n "us3r" > username
+        echo -n "pAssw0rd" > password
+        docker run --name test2 -d -p8080:80 -v$PWD/username:/username -v$PWD/password:/password -eUSERNAME_FILE=/username -ePASSWORD_FILE=/password docker-nginx-webdav:latest
+        docker ps
+
+        echo "Test with correct user / password"
+        export RESULT=$(curl -I http://us3r:pAssw0rd@localhost:8080 | sed -e"s/\r//" | head -n1)
+        export EXPECTED="HTTP/1.1 200 OK"
+        if [ "$RESULT" != "HTTP/1.1 200 OK" ]; then
+          echo "curl returned $RESULT, but $EXPECTED was expected"
+          exit 5
+        fi
+
+        echo "Test with wrong user / password"
+        export RESULT=$(curl -I http://localhost:8080 | sed -e"s/\r//" | head -n1)
+        export EXPECTED="HTTP/1.1 401 Unauthorized"
+        if [ "$RESULT" != "HTTP/1.1 401 Unauthorized" ]; then
+          echo "curl returned $RESULT, but $EXPECTED was expected"
+          exit 6
+        fi
+
+        docker kill test2
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
