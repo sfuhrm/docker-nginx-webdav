@@ -47,7 +47,7 @@ jobs:
         echo "Download file"
         curl -o testfile2 http://user:password@localhost:8080/testfile || exit 8
 
-        cmp testfile testfile 2 || exit 9
+        cmp testfile testfile2 || exit 9
 
         docker kill test1
 
