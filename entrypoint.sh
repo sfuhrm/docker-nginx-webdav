@@ -21,7 +21,7 @@ fi
 
 if [ -n "$USERNAME_FILE" ] && [ -n "$PASSWORD_FILE" ]; then
 	echo "Username / password taken from files."
-	htpasswd -bc /etc/nginx/htpasswd "$(cat $USERNAME_FILE)" "$(cat $PASSWORD_FILE)"
+	cat $PASSWORD_FILE | htpasswd -i -bc /etc/nginx/htpasswd "$(cat $USERNAME_FILE)"
 elif [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 	echo "Username / password taken from env."
 	htpasswd -bc /etc/nginx/htpasswd "$USERNAME" "$PASSWORD"
