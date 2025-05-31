@@ -17,4 +17,34 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag docker-nginx-webdav:$(date +%s)
+      run: docker build . --file Dockerfile --tag docker-nginx-webdav:latest
+
+    - name: Test the image
+      run: |
+        docker run --name test1 -d -p8080:80 -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
+
+        echo "Test with correct user / password"
+        RESULT=$(curl -I http://user:password@localhost:8080|head -n1)
+        if [ "$RESULT" != "HTTP/1.1 200 OK" ]; then
+          echo "curl returned $RESULT, but HTTP 200 was expected"
+          exit 5
+        fi
+
+        echo "Test with wrong user / password"
+        RESULT=$(curl -I http://localhost:8080|head -n1)
+        if [ "$RESULT" != "HTTP/1.1 401 Unauthorized" ]; then
+          echo "curl returned $RESULT, but HTTP 401 was expected"
+          exit 6
+        fi
+
+        echo "Upload file"
+        echo "hello world" > testfile
+        curl -T testfile http://user:password@localhost:8080/testfile || exit 7
+
+        echo "Download file"
+        curl -o testfile2 http://user:password@localhost:8080/testfile || exit 8
+
+        cmp testfile testfile 2 || exit 9
+
+        docker kill test1
+
