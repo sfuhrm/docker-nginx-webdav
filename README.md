@@ -2,7 +2,6 @@
 
 [![Docker Image CI](https://github.com/sfuhrm/docker-nginx-webdav/actions/workflows/docker-image.yml/badge.svg)](https://github.com/sfuhrm/docker-nginx-webdav/actions/workflows/docker-image.yml)
 [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)
-![Dockerhub Push](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fhub.docker.com%2Fv2%2Fnamespaces%2Fsfuhrm%2Frepositories%2Fdocker-nginx-webdav%2Ftags%2Fmaster&query=%24.tag_last_pushed&prefix=on%20&logo=docker&label=dockerhub%20push&cacheSeconds=600)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
@@ -24,10 +23,20 @@ All tags on Dockerhub have passed the internal tests.
 Usually you want to go with the `nightly` version to get the newest
 Alpine Linux base. 
 
+Overview of tag dates:
+
+| Tag   |      Date      |
+|----------|:-------------:|
+| nightly | ![Dockerhub Nightly Push](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fhub.docker.com%2Fv2%2Fnamespaces%2Fsfuhrm%2Frepositories%2Fdocker-nginx-webdav%2Ftags%2Fnightly&query=%24.tag_last_pushed&prefix=on%20&logo=docker&label=dockerhub%20nightly%20push&cacheSeconds=600) |
+| master | ![Dockerhub Master Push](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fhub.docker.com%2Fv2%2Fnamespaces%2Fsfuhrm%2Frepositories%2Fdocker-nginx-webdav%2Ftags%2Fmaster&query=%24.tag_last_pushed&prefix=on%20&logo=docker&label=dockerhub%20master%20push&cacheSeconds=600) |
+| latest | ![Dockerhub Latest Push](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fhub.docker.com%2Fv2%2Fnamespaces%2Fsfuhrm%2Frepositories%2Fdocker-nginx-webdav%2Ftags%2Flatest&query=%24.tag_last_pushed&prefix=on%20&logo=docker&label=dockerhub%20latest%20push&cacheSeconds=600) |
+
+The meanings of the tags:
+
 | Tag   |      Meaning      |
 |----------|:-------------:|
 | `nightly` | Nightly build of the master branch, usually up-to-date Alpine Linux verison. |
-| `master` | Last master branch commit. Same as `nightly`, but based on an older Appine Linux.. |
+| `master` | Last master branch commit. Same features as `nightly`, but based on an older Appine Linux. |
 | `latest` |  Latest release per Github tag, *not* necessarily the most up-to-date Alpine Linux version! |
 | `v1.0.0` |  Version snapshot of the past. Used to go back to a previous well-known state. |
 
