@@ -31,13 +31,14 @@ No built-in TLS support. Reverse proxy with TLS recommended.
 
 ## Authentication
 
-### With environment variables
+### With credentials in environment variables
 
 To restrict access to only authorized users (recommended), you can define two environment variables: `$USERNAME` and `$PASSWORD`
 ```console
 $ docker run --name webdav -p 80:80 -v /path/to/your/shared/files/:/media/data -e USERNAME=webdav -e PASSWORD=webdav -d maltokyo/docker-nginx-webdav
+```
 
-### With files variables
+### With credentials in files
 
 If you want to pass username and password in files like Docker secrets, you can define two environment variables: `$USERNAME_FILE` and `$PASSWORD_FILE`
 
