@@ -12,7 +12,7 @@ if [ ! -d "$MOUNTPOINT" ]; then
 	exit 2
 fi
 if [ ! -r "$MOUNTPOINT" ]; then
-	echo "Could read-access data $MOUNTPOINT dir, exiting!"
+	echo "Could not read-access data $MOUNTPOINT dir, exiting!"
 	exit 3
 fi
 
