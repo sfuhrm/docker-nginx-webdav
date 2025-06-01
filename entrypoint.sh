@@ -22,7 +22,7 @@ if [ -n "$USERNAME_FILE" ] && [ -n "$PASSWORD_FILE" ]; then
 		htpasswd < "$PASSWORD_FILE" -ic /etc/nginx/htpasswd "$(cat $USERNAME_FILE)"
 	else
 		echo "Files $USERNAME_FILE and/or $PASSWORD_FILE are not readable!"
-		exit 5
+		exit 4
 	fi
 elif [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 	echo "Username / password taken from env."
