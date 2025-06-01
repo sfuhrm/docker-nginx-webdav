@@ -27,8 +27,8 @@ Alpine Linux base.
 | Tag   |      Meaning      |
 |----------|:-------------:|
 | `nightly` | Nightly build of the master branch, usually up-to-date Alpine Linux verison. |
-| `latest` |  Latest release per Github tag, *not* necessarily the most up-to-date Alpine Linux version! |
 | `master` | Last master branch commit. May be older than `nightly` and `latest`. |
+| `latest` |  Latest release per Github tag, *not* necessarily the most up-to-date Alpine Linux version! |
 | `v1.0.0` |  Version snapshot of the past. Used to go back to a previous well-known state. |
 
 ## How to use this image
