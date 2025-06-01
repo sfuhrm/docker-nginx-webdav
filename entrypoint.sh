@@ -19,7 +19,7 @@ fi
 if [ -n "$USERNAME_FILE" ] && [ -n "$PASSWORD_FILE" ]; then
 	if [ -r "$USERNAME_FILE" ] && [ -r "$PASSWORD_FILE" ]; then
 		echo "Username / password taken from files."
-		htpasswd -bc /etc/nginx/htpasswd "$(cat $USERNAME_FILE)" "$(cat $PASSWORD_FILE)"
+		htpasswd < "$PASSWORD_FILE" -ic /etc/nginx/htpasswd "$(cat $USERNAME_FILE)"
 	else
 		echo "Files $USERNAME_FILE and/or $PASSWORD_FILE are not readable!"
 		exit 5
