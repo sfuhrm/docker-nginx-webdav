@@ -17,6 +17,19 @@ this image: [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhr
 > * improving the entrypoint script,
 > * adding Github Actions build / push with automatic daily image building.
 
+## Docker tags
+
+Different tags mean different versions.
+All tags on Dockerhub have passed the internal tests.
+Usually you want to go with the `nightly` version to get the newest
+Alpine Linux base. 
+
+| Tag   |      Meaning      |
+|----------|:-------------:|
+| `nightly` | Nightly build of the master branch, usually up-to-date Alpine Linux verison. |
+| `latest` |  Latest release per Github tag, *not* necessarily the most up-to-date Alpine Linux version! |
+| `master` | Last master branch commit. May be older than `nightly` and `latest`. |
+
 ## How to use this image
 ```console
 $ docker run --name keepass-webdav -p 80:80 -v /path/to/your/keepass/files/:/media/data -d sfuhrm/docker-nginx-webdav
