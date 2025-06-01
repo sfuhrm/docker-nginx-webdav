@@ -3,6 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ master ]
+    tags:
+      - 'v*'
   schedule:
     - cron: '35 5 * * *'
   workflow_dispatch:
