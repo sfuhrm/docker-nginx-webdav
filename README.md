@@ -2,7 +2,7 @@
 
 [![Docker Image CI](https://github.com/sfuhrm/docker-nginx-webdav/actions/workflows/docker-image.yml/badge.svg)](https://github.com/sfuhrm/docker-nginx-webdav/actions/workflows/docker-image.yml)
 [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)
-![Dockerhub Push](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fhub.docker.com%2Fv2%2Fnamespaces%2Fsfuhrm%2Frepositories%2Fdocker-nginx-webdav%2Ftags%2Fmaster&query=%24.tag_last_pushed&prefix=on%20&logo=docker&label=dockerhub%20push)
+![Dockerhub Push](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fhub.docker.com%2Fv2%2Fnamespaces%2Fsfuhrm%2Frepositories%2Fdocker-nginx-webdav%2Ftags%2Fmaster&query=%24.tag_last_pushed&prefix=on%20&logo=docker&label=dockerhub%20push&cacheSeconds=600)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
