@@ -32,7 +32,7 @@ jobs:
 
     - name: Test the image with no USERNAME/PASSWORD
       run: |
-        docker run --name test0 -d -p8080:8080 docker-nginx-webdav:latest
+        docker run --name test0 -d -p8080:80 docker-nginx-webdav:latest
         docker ps
 
         echo "Test with no credentials"
