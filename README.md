@@ -12,6 +12,8 @@ The image is only around 5.3 MB in size and the container takes around 10 MB of 
 maltokyos image: [![Docker Image Size](https://img.shields.io/docker/image-size/maltokyo/docker-nginx-webdav)](https://hub.docker.com/r/maltokyo/docker-nginx-webdav),
 this image: [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)),
 > * filesystem secrets are never put in an environment variable,
+> * complete runs as user, not root (for security),
+> * listens to port tcp `8080`, not port tcp `80`
 > * replacing the base Debian image with Alpine Linux,
 > * improving the entrypoint script,
 > * adding Github Actions build / push with automatic daily image building.
@@ -41,8 +43,11 @@ The meanings of the tags:
 | `v1.0.0` |  Version snapshot of the past. Used to go back to a previous well-known state. |
 
 ## How to use this image
+
+The image listens to the container-side port `8080` as the container-side user `nginx` (host uid `100`, gid `101`).
+
 ```console
-$ docker run --name keepass-webdav -p 80:80 -v /path/to/your/keepass/files/:/media/data -d sfuhrm/docker-nginx-webdav
+$ docker run --name keepass-webdav -p 80:8080 -v /path/to/your/keepass/files/:/media/data -d sfuhrm/docker-nginx-webdav
 ```
 
 Or use the [docker-compose](./docker-compose.yml) file included in this repository.
@@ -58,7 +63,7 @@ No built-in TLS support. Reverse proxy with TLS recommended.
 
 To restrict access to only authorized users (recommended), you can define two environment variables: `$USERNAME` and `$PASSWORD`
 ```console
-$ docker run --name webdav -p 80:80 -v /path/to/your/shared/files/:/media/data -e USERNAME=webdav -e PASSWORD=webdav -d sfuhrm/docker-nginx-webdav
+$ docker run --name webdav -p 80:8080 -v /path/to/your/shared/files/:/media/data -e USERNAME=webdav -e PASSWORD=webdav -d sfuhrm/docker-nginx-webdav
 ```
 
 ### With credentials in files
@@ -85,7 +90,7 @@ services:
     security_opt:
       - no-new-privileges:true
     ports:
-      - "80:80"
+      - "80:8080"
     volumes:
       - "<path-you-want-to-share>:/media/data"
     secrets:
