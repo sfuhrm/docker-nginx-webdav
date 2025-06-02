@@ -30,6 +30,39 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag docker-nginx-webdav:latest
 
+    - name: Test the image with no USERNAME/PASSWORD
+      run: |
+        docker run --name test1 -d -p8080:8080 docker-nginx-webdav:latest
+        docker ps
+
+        echo "Test with correct user / password"
+        export RESULT=$(curl -I http://user:password@localhost:8080 | sed -e"s/\r//" | head -n1)
+        export EXPECTED="HTTP/1.1 200 OK"
+        if [ "$RESULT" != "HTTP/1.1 200 OK" ]; then
+          echo "curl returned $RESULT, but $EXPECTED was expected"
+          exit 5
+        fi
+
+        echo "Test with wrong user / password"
+        export RESULT=$(curl -I http://localhost:8080 | sed -e"s/\r//" | head -n1)
+        export EXPECTED="HTTP/1.1 401 Unauthorized"
+        if [ "$RESULT" != "HTTP/1.1 401 Unauthorized" ]; then
+          echo "curl returned $RESULT, but $EXPECTED was expected"
+          exit 6
+        fi
+
+        echo "Upload file"
+        echo "hello world" > testfile
+        curl -T testfile http://user:password@localhost:8080/testfile || exit 7
+
+        echo "Download file"
+        curl -o testfile2 http://user:password@localhost:8080/testfile || exit 8
+
+        cmp testfile testfile2 || exit 9
+
+        docker kill test1
+
+
     - name: Test the image with env USERNAME/PASSWORD
       run: |
         docker run --name test1 -d -p8080:8080 -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
