@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
-The image is only around 5.3 MB in size and the container takes around 10 MB of memory.
+The [image](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav) is only around 5.3 MB in size and the container takes around 10 MB of memory.
 
 > This is a fork of https://github.com/maltokyo/docker-nginx-webdav with the following changes:
 > * reducing the image layers and size (
