@@ -9,7 +9,8 @@ on:
   schedule:
     - cron: '35 5 * * *'
   workflow_dispatch:
-
+env:
+  DOCKER_PORT: 80
 jobs:
 
   build:
@@ -33,7 +34,7 @@ jobs:
 
     - name: Test the image with no USERNAME/PASSWORD
       run: |
-        docker run --name test0 -d -p8080:80 docker-nginx-webdav:latest
+        docker run --name test0 -d -p8080:$DOCKER_PORT docker-nginx-webdav:latest
         docker ps
 
         echo "Test with no credentials"
@@ -58,7 +59,7 @@ jobs:
 
     - name: Test the image with env USERNAME/PASSWORD
       run: |
-        docker run --name test1 -d -p8080:80 -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
+        docker run --name test1 -d -p8080:$DOCKER_PORT -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
         docker ps
 
         echo "Test with correct user / password"
@@ -92,7 +93,7 @@ jobs:
       run: |
         echo -n "us3r" > username
         echo -n "pAssw0rd" > password
-        docker run --name test2 -d -p8080:80 -v$PWD/username:/username -v$PWD/password:/password -eUSERNAME_FILE=/username -ePASSWORD_FILE=/password docker-nginx-webdav:latest
+        docker run --name test2 -d -p8080:$DOCKER_PORT -v$PWD/username:/username -v$PWD/password:/password -eUSERNAME_FILE=/username -ePASSWORD_FILE=/password docker-nginx-webdav:latest
         docker ps
 
         echo "Test with correct user / password"
