@@ -38,7 +38,10 @@ unset PASSWORD
 unset USERNAME_FILE
 unset PASSWORD_FILE
 
-chmod 0444 /etc/nginx/permissive/default.conf /etc/nginx/permissive/htpasswd
+chmod 0444 /etc/nginx/permissive/default.conf
+if [ -f /etc/nginx/permissive/htpasswd ]; then
+	chmod 0444 /etc/nginx/permissive/htpasswd
+fi
 chmod 0555 /etc/nginx/permissive
 
 exec "$@"
