@@ -10,7 +10,8 @@ on:
     - cron: '35 5 * * *'
   workflow_dispatch:
 env:
-  DOCKER_PORT: 80
+  LOCAL_PORT: 8080
+  DOCKER_PORT: 8080
 jobs:
 
   build:
@@ -34,11 +35,11 @@ jobs:
 
     - name: Test the image with no USERNAME/PASSWORD
       run: |
-        docker run --name test0 -d -p8080:$DOCKER_PORT docker-nginx-webdav:latest
+        docker run --name test0 -d -p$LOCAL_PORT:$DOCKER_PORT docker-nginx-webdav:latest
         docker ps
 
         echo "Test with no credentials"
-        export RESULT=$(curl -I http://localhost:8080 | sed -e"s/\r//" | head -n1)
+        export RESULT=$(curl -I http://localhost:$LOCAL_PORT | sed -e"s/\r//" | head -n1)
         export EXPECTED="HTTP/1.1 200 OK"
         if [ "$RESULT" != "HTTP/1.1 200 OK" ]; then
           echo "curl returned $RESULT, but $EXPECTED was expected"
@@ -47,10 +48,10 @@ jobs:
 
         echo "Upload file"
         echo "hello anonymous" > testfile
-        curl -T testfile http://localhost:8080/testfile || exit 7
+        curl -T testfile http://localhost:$LOCAL_PORT/testfile || exit 7
 
         echo "Download file"
-        curl -o testfile2 http://@localhost:8080/testfile || exit 8
+        curl -o testfile2 http://@localhost:$LOCAL_PORT/testfile || exit 8
 
         cmp testfile testfile2 || exit 9
 
@@ -59,11 +60,11 @@ jobs:
 
     - name: Test the image with env USERNAME/PASSWORD
       run: |
-        docker run --name test1 -d -p8080:$DOCKER_PORT -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
+        docker run --name test1 -d -p$LOCAL_PORT:$DOCKER_PORT -eUSERNAME=user -ePASSWORD=password docker-nginx-webdav:latest
         docker ps
 
         echo "Test with correct user / password"
-        export RESULT=$(curl -I http://user:password@localhost:8080 | sed -e"s/\r//" | head -n1)
+        export RESULT=$(curl -I http://user:password@localhost:$LOCAL_PORT | sed -e"s/\r//" | head -n1)
         export EXPECTED="HTTP/1.1 200 OK"
         if [ "$RESULT" != "HTTP/1.1 200 OK" ]; then
           echo "curl returned $RESULT, but $EXPECTED was expected"
@@ -71,7 +72,7 @@ jobs:
         fi
 
         echo "Test with wrong user / password"
-        export RESULT=$(curl -I http://localhost:8080 | sed -e"s/\r//" | head -n1)
+        export RESULT=$(curl -I http://localhost:$LOCAL_PORT | sed -e"s/\r//" | head -n1)
         export EXPECTED="HTTP/1.1 401 Unauthorized"
         if [ "$RESULT" != "HTTP/1.1 401 Unauthorized" ]; then
           echo "curl returned $RESULT, but $EXPECTED was expected"
@@ -80,10 +81,10 @@ jobs:
 
         echo "Upload file"
         echo "hello world" > testfile
-        curl -T testfile http://user:password@localhost:8080/testfile || exit 7
+        curl -T testfile http://user:password@localhost:$LOCAL_PORT/testfile || exit 7
 
         echo "Download file"
-        curl -o testfile2 http://user:password@localhost:8080/testfile || exit 8
+        curl -o testfile2 http://user:password@localhost:$LOCAL_PORT/testfile || exit 8
 
         cmp testfile testfile2 || exit 9
 
@@ -93,11 +94,11 @@ jobs:
       run: |
         echo -n "us3r" > username
         echo -n "pAssw0rd" > password
-        docker run --name test2 -d -p8080:$DOCKER_PORT -v$PWD/username:/username -v$PWD/password:/password -eUSERNAME_FILE=/username -ePASSWORD_FILE=/password docker-nginx-webdav:latest
+        docker run --name test2 -d -p$LOCAL_PORT:$DOCKER_PORT -v$PWD/username:/username -v$PWD/password:/password -eUSERNAME_FILE=/username -ePASSWORD_FILE=/password docker-nginx-webdav:latest
         docker ps
 
         echo "Test with correct user / password"
-        export RESULT=$(curl -I http://us3r:pAssw0rd@localhost:8080 | sed -e"s/\r//" | head -n1)
+        export RESULT=$(curl -I http://us3r:pAssw0rd@localhost:$LOCAL_PORT | sed -e"s/\r//" | head -n1)
         export EXPECTED="HTTP/1.1 200 OK"
         if [ "$RESULT" != "HTTP/1.1 200 OK" ]; then
           echo "curl returned $RESULT, but $EXPECTED was expected"
@@ -105,7 +106,7 @@ jobs:
         fi
 
         echo "Test with wrong user / password"
-        export RESULT=$(curl -I http://localhost:8080 | sed -e"s/\r//" | head -n1)
+        export RESULT=$(curl -I http://localhost:$LOCAL_PORT | sed -e"s/\r//" | head -n1)
         export EXPECTED="HTTP/1.1 401 Unauthorized"
         if [ "$RESULT" != "HTTP/1.1 401 Unauthorized" ]; then
           echo "curl returned $RESULT, but $EXPECTED was expected"
