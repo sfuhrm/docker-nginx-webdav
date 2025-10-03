@@ -26,11 +26,11 @@ if [ -n "$USERNAME_FILE" ] && [ -n "$PASSWORD_FILE" ]; then
 	fi
 elif [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 	echo "Username / password taken from env."
-	htpasswd -bc /etc/nginx/htpasswd "$USERNAME" "$PASSWORD"
+	htpasswd -bc /etc/nginx/permissive/htpasswd "$USERNAME" "$PASSWORD"
 else
     echo Using no auth.
-	sed -i 's%auth_basic "Restricted";% %g' /etc/nginx/http.d/default.conf
-	sed -i 's%auth_basic_user_file /etc/nginx/htpasswd;% %g' /etc/nginx/http.d/default.conf
+	sed -i 's%auth_basic "Restricted";% %g' /etc/nginx/permissive/default.conf
+	sed -i 's%auth_basic_user_file /etc/nginx/htpasswd;% %g' /etc/nginx/permissive/default.conf
 fi
 
 exec "$@"
