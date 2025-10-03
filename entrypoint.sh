@@ -33,4 +33,12 @@ else
 	sed -i 's%auth_basic_user_file /etc/nginx/permissive/htpasswd;% %g' /etc/nginx/permissive/default.conf
 fi
 
+unset USERNAME
+unset PASSWORD
+unset USERNAME_FILE
+unset PASSWORD_FILE
+
+chmod 0444 /etc/nginx/permissive/default.conf /etc/nginx/permissive/htpasswd
+chmod 0555 /etc/nginx/permissive
+
 exec "$@"
