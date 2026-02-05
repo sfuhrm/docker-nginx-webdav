@@ -43,7 +43,7 @@ jobs:
           # OPTIONS request.
           # The response should include the 'DAV' header, indicating that
           # WebDAV is enabled.
-          curl -s --fail -X OPTIONS http://localhost:8080 | grep "DAV"
+          curl -D % -s --fail -X OPTIONS http://localhost:8080 2>&1 | grep "DAV"
 
       - name: "Test 3: Upload a file via WebDAV"
         run: |
