@@ -21,8 +21,8 @@ jobs:
         run: |
           docker run -d --name webdav \
             -p 8080:80 \
-            -e WEBDAV_USERNAME=testuser \
-            -e WEBDAV_PASSWORD=testpassword \
+            -e USERNAME=testuser \
+            -e PASSWORD=testpassword \
             docker-nginx-webdav
 
       - name: Wait for container to start
@@ -96,8 +96,8 @@ jobs:
             -p 8081:80 \
             -v $(pwd)/username.txt:/etc/webdav/username.txt \
             -v $(pwd)/password.txt:/etc/webdav/password.txt \
-            -e WEBDAV_USERNAME_FILE=/etc/webdav/username.txt \
-            -e WEBDAV_PASSWORD_FILE=/etc/webdav/password.txt \
+            -e USERNAME_FILE=/etc/webdav/username.txt \
+            -e PASSWORD_FILE=/etc/webdav/password.txt \
             docker-nginx-webdav
 
       - name: Wait for container to start
