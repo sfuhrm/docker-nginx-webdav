@@ -11,6 +11,7 @@ RUN apk add --no-cache --upgrade nginx nginx-mod-http-dav-ext apache2-utils curl
     touch /etc/nginx/htpasswd && chown nginx:nginx /etc/nginx/htpasswd && \
     setcap cap_net_bind_service=+ep /usr/sbin/nginx && \
     apk del libcap && \
+    sed -i 's/^user .*/#\1;/' /etc/nginx/nginx.conf && \
     rm -rf /var/cache/apk/* /tmp/* /var/tmp/* && \
     find / -xdev -type f -perm /6000 -exec chmod a-s {} +
 
