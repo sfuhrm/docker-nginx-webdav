@@ -1,0 +1,150 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  env_based_auth_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t docker-nginx-webdav .
+
+      - name: Run container
+        run: |
+          docker run -d --name webdav \
+            -p 8080:80 \
+            -e WEBDAV_USERNAME=testuser \
+            -e WEBDAV_PASSWORD=testpassword \
+            docker-nginx-webdav
+
+      - name: Wait for container to start
+        run: |
+          echo "Waiting for container to start..."
+          sleep 10
+          docker ps
+
+      - name: Test 1: Check for 401 Unauthorized
+        run: |
+          # This test ensures that the server correctly returns a 401 Unauthorized error
+          # when trying to access a protected resource without credentials.
+          curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 | grep 401
+
+      - name: Test 2: Check WebDAV OPTIONS
+        run: |
+          # This test verifies that the WebDAV server correctly responds to an OPTIONS request.
+          # The response should include the 'DAV' header, indicating that WebDAV is enabled.
+          curl -s --fail -X OPTIONS http://localhost:8080 | grep "DAV"
+
+      - name: Test 3: Upload a file via WebDAV
+        run: |
+          # This test creates a test file and uploads it to the WebDAV server.
+          # It checks for a '201 Created' response to ensure the upload was successful.
+          echo "This is a test file." > test.txt
+          curl -s --fail -T test.txt -u testuser:testpassword http://localhost:8080/test.txt -w "%{http_code}" | grep 201
+
+      - name: Test 4: Download the file via WebDAV and verify content
+        run: |
+          # This test downloads the previously uploaded file and verifies its content.
+          # This ensures that the file was stored correctly on the server.
+          curl -s -u testuser:testpassword http://localhost:8080/test.txt | grep "This is a test file."
+
+      - name: Test 5: Delete the file via WebDAV
+        run: |
+          # This test deletes the file from the WebDAV server.
+          # It checks for a '204 No Content' response to confirm the deletion.
+          curl -s --fail -X DELETE -u testuser:testpassword http://localhost:8080/test.txt -w "%{http_code}" | grep 204
+
+      - name: Test 6: Check for non-existent file
+        run: |
+          # This test ensures that the server correctly returns a 404 Not Found error
+          # when trying to access a file that has been deleted.
+          curl -s -o /dev/null -w "%{http_code}" -u testuser:testpassword http://localhost:8080/test.txt | grep 404
+  
+  file_based_auth_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create username and password files
+        run: |
+          echo "fileuser" > username.txt
+          echo "filepassword" > password.txt
+
+      - name: Build Docker image
+        run: docker build -t docker-nginx-webdav .
+
+      - name: Run container
+        run: |
+          docker run -d --name webdav-file-auth \
+            -p 8081:80 \
+            -v $(pwd)/username.txt:/etc/webdav/username.txt \
+            -v $(pwd)/password.txt:/etc/webdav/password.txt \
+            -e WEBDAV_USERNAME_FILE=/etc/webdav/username.txt \
+            -e WEBDAV_PASSWORD_FILE=/etc/webdav/password.txt \
+            docker-nginx-webdav
+      
+      - name: Wait for container to start
+        run: |
+          echo "Waiting for container to start..."
+          sleep 10
+          docker ps
+
+      - name: Test 1: Check for 401 Unauthorized
+        run: |
+          # This test ensures that the server correctly returns a 401 Unauthorized error
+          # when trying to access a protected resource without credentials.
+          curl -s -o /dev/null -w "%{http_code}" http://localhost:8081/ | grep 401
+
+      - name: Test 2: Upload a file via WebDAV
+        run: |
+          echo "This is a test file for file-based auth." > test-file-auth.txt
+          curl -s --fail -T test-file-auth.txt -u fileuser:filepassword http://localhost:8081/test-file-auth.txt -w "%{http_code}" | grep 201
+
+      - name: Test 3: Download the file and verify content
+        run: |
+          curl -s -u fileuser:filepassword http://localhost:8081/test-file-auth.txt | grep "This is a test file for file-based auth."
+      
+      - name: Test 4: Delete the file
+        run: |
+          curl -s --fail -X DELETE -u fileuser:filepassword http://localhost:8081/test-file-auth.txt -w "%{http_code}" | grep 204
+
+  no_auth_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t docker-nginx-webdav .
+
+      - name: Run container without authentication
+        run: |
+          docker run -d --name webdav-no-auth \
+            -p 8082:80 \
+            docker-nginx-webdav
+
+      - name: Wait for container to start
+        run: |
+          echo "Waiting for container to start..."
+          sleep 10
+          docker ps
+      
+      - name: Test 1: Upload a file via WebDAV
+        run: |
+          echo "This is a test file for no-auth." > test-no-auth.txt
+          curl -s --fail -T test-no-auth.txt http://localhost:8082/test-no-auth.txt -w "%{http_code}" | grep 201
+
+      - name: Test 2: Download the file and verify content
+        run: |
+          curl -s http://localhost:8082/test-no-auth.txt | grep "This is a test file for no-auth."
+
+      - name: Test 3: Delete the file
+        run: |
+          curl -s --fail -X DELETE http://localhost:8082/test-no-auth.txt -w "%{http_code}" | grep 204
