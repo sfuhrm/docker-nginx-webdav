@@ -5,17 +5,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
-The [image](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav) is only around 7 MB in size and the container takes around 10 MB of memory.
+The [image](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav) is only around 5.3 MB in size and the container takes around 10 MB of memory.
 
 > This is a fork of https://github.com/maltokyo/docker-nginx-webdav with the following changes:
 > * reducing the image layers and size (
 maltokyos image: [![Docker Image Size](https://img.shields.io/docker/image-size/maltokyo/docker-nginx-webdav)](https://hub.docker.com/r/maltokyo/docker-nginx-webdav),
 this image: [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)),
-> * possibility to pass secrets in files (aka docker secrets),
 > * filesystem secrets are never put in an environment variable,
 > * replacing the base Debian image with Alpine Linux,
 > * improving the entrypoint script,
-> * running container as plain user (v2.0.0+),
 > * adding Github Actions build / push with automatic daily image building.
 
 ## Docker tags
