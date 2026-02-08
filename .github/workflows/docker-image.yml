@@ -9,6 +9,10 @@ on:
   schedule:
     - cron: '35 5 * * *'
   workflow_dispatch:
+
+permissions:
+  contents: read
+
 env:
   HOST_PORT: 8080
   DOCKER_PORT: 80
