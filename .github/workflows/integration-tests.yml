@@ -6,6 +6,7 @@ name: Integration Tests
     branches:
       - master
   pull_request:
+  workflow_call:
 
 jobs:
   env_based_auth_tests:
