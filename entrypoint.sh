@@ -28,14 +28,14 @@ fi
 if [ -n "$USERNAME_FILE" ] && [ -n "$PASSWORD_FILE" ]; then
 	if [ -r "$USERNAME_FILE" ] && [ -r "$PASSWORD_FILE" ]; then
 		echo "Username / password taken from files."
-		htpasswd -ic /etc/nginx/htpasswd "$(cat "$USERNAME_FILE")" < "$PASSWORD_FILE"
+		echo "$(cat "$USERNAME_FILE"):$(openssl passwd -5 -stdin < "$PASSWORD_FILE")" > /etc/nginx/htpasswd
 	else
 		echo "Files $USERNAME_FILE and/or $PASSWORD_FILE are not readable!"
 		exit 4
 	fi
 elif [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 	echo "Username / password taken from env."
-	echo "$PASSWORD" | htpasswd -ic /etc/nginx/htpasswd "$USERNAME"
+	echo "$USERNAME:$(echo "$PASSWORD" | openssl passwd -5 -stdin)" > /etc/nginx/htpasswd
 else
     echo "Using no auth."
 	sed -i 's%auth_basic "Restricted";% %g' "$CONFIG_FILE"
