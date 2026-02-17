@@ -15,6 +15,7 @@ this image: [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhr
 > * replacing the base Debian image with Alpine Linux,
 > * improving the entrypoint script,
 > * adding Github Actions build / push with automatic daily image building.
+> * Support for architectures linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64
 
 ## Docker tags
 
