@@ -1,8 +1,8 @@
-FROM alpine:3.19 AS builder
+FROM alpine:latest AS builder
 
 RUN apk add --no-cache openssl
 
-FROM alpine:3.19
+FROM alpine:latest
 
 LABEL maintainer="sfuhrm"
 
