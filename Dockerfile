@@ -18,7 +18,7 @@ COPY --chown=root:root webdav.conf /etc/nginx/http.d/default.conf
 VOLUME /media/data
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --spider -S http://localhost/ 2>&1 | grep -E "HTTP/1\.[01] (200|401)"
+    CMD wget --spider -S http://127.0.0.1/ 2>&1 | grep -E "HTTP/1\.[01] (200|401)"
 
 ENTRYPOINT [ "/entrypoint.sh"]
 CMD [ "nginx",  "-g", "daemon off;" ]
