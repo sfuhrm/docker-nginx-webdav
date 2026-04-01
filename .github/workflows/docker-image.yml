@@ -47,7 +47,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-      packages: write
 
     steps:
 
@@ -86,4 +85,4 @@ jobs:
       uses: sigstore/cosign-installer@v3
 
     - name: Sign Docker image
-      run: cosign sign --recursive ${{ steps.meta.outputs.tags }} --yes
+      run: cosign sign --recursive --oidc-provider github ${{ steps.meta.outputs.tags }} --yes
