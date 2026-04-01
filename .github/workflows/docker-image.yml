@@ -87,7 +87,7 @@ jobs:
 
     - name: Get image digest
       run: |
-        echo "${{ steps.meta.outputs.tags }}" | tr ' ' '\n' | while read tag; do
+        for tag in ${{ steps.meta.outputs.tags }}; do
           digest=$(docker manifest inspect "$tag" | jq -r '.manifests[0].digest')
           echo "Signing $tag@$digest"
           cosign sign --recursive "$tag@$digest" --yes
