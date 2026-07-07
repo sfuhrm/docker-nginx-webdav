@@ -4,6 +4,13 @@ LABEL maintainer="sfuhrm"
 
 EXPOSE 80/tcp
 
+ARG NGINX_UID=100
+ARG NGINX_GID=101
+
+# alpine doesn't have usermod,groupmod so create the nginx user and group first
+RUN addgroup -g $NGINX_GID -S nginx && \
+    adduser -S -H -u $NGINX_UID -h /var/lib/nginx -s /sbin/nologin -G nginx -g nginx nginx
+
 RUN apk add --no-cache --upgrade nginx nginx-mod-http-dav-ext openssl && \
     mkdir -p "/media/data" && \
     chown -R nginx:nginx "/media/data" && \

@@ -1,12 +1,14 @@
-version: '2'
 services:
   nginx_webdav:
 #    image: sfuhrm/docker-nginx-webdav # comment out this line if you are building from source.
-    build: . # comment out this line if you are just pulling the docker hub image.
+    # comment out these lines if you are just pulling the docker hub image.
+    build:
+      context: .
+      args:
+        NGINX_UID: 100
+        NGINX_GID: 101
 #    ports: # enable this if you are not using reverse proxy, otherwise leave commented out
 #      - "80:80"
+    container_name: webdav
     volumes:
       - "/path/to/your/share:/media/data"
-    environment:
-      USERNAME: your_webdav_user
-      PASSWORD: your_webdav_passwd
