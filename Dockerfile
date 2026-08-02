@@ -11,7 +11,8 @@ ARG NGINX_GID=101
 RUN addgroup -g $NGINX_GID -S nginx && \
     adduser -S -H -u $NGINX_UID -h /var/lib/nginx -s /sbin/nologin -G nginx -g nginx nginx
 
-RUN apk add --no-cache --upgrade nginx nginx-mod-http-dav-ext openssl && \
+RUN apk add --no-cache --upgrade nginx nginx-mod-http-dav-ext openssl tzdata && \
+    ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
     mkdir -p "/media/data" && \
     chown -R nginx:nginx "/media/data" && \
     ln -sf /dev/stdout /var/log/nginx/access.log && \
