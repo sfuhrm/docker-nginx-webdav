@@ -48,7 +48,7 @@ elif [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 	printf '%s:%s\n' "$USERNAME" "$PASSWORD_HASH" > "$HTPASSWD"
 else
 	echo "Using no auth."
-	sed -i '/auth_basic/d' "$CONFIG_FILE"
+	sed '/auth_basic/d' "$CONFIG_TEMPLATE" > "$CONFIG_FILE"
 fi
 
 if [ -f "$HTPASSWD" ]; then
