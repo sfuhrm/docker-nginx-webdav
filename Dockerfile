@@ -4,7 +4,7 @@ LABEL maintainer="sfuhrm"
 
 EXPOSE 80/tcp
 
-RUN apk add --no-cache --upgrade nginx nginx-mod-http-dav-ext openssl && \
+RUN apk add --no-cache nginx nginx-mod-http-dav-ext openssl && \
     mkdir -p "/media/data" && \
     chown -R nginx:nginx "/media/data" && \
     ln -sf /dev/stdout /var/log/nginx/access.log && \
@@ -13,7 +13,7 @@ RUN apk add --no-cache --upgrade nginx nginx-mod-http-dav-ext openssl && \
     find / -xdev -type f -perm /6000 -exec chmod a-s {} +
 
 COPY --chmod=0555 entrypoint.sh /
-COPY --chown=root:root webdav.conf /etc/nginx/http.d/default.conf
+COPY --chown=root:root webdav.conf /etc/nginx/http.d/default.conf.template
 
 VOLUME /media/data
 
@@ -21,4 +21,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --spider -S http://127.0.0.1/ 2>&1 | grep -E "HTTP/1\.[01] (200|401)"
 
 ENTRYPOINT [ "/entrypoint.sh"]
-CMD [ "nginx",  "-g", "daemon off;" ]
+CMD [ "nginx", "-g", "daemon off;" ]

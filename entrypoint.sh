@@ -1,45 +1,62 @@
 #!/bin/sh
 
-set -e
-MOUNTPOINT=/media/data/
+set -eu
+
+MOUNTPOINT="/media/data/"
 CONFIG_FILE="/etc/nginx/http.d/default.conf"
-CONFIG_BACKUP="/etc/nginx/http.d/default.conf.bak"
+CONFIG_TEMPLATE="/etc/nginx/http.d/default.conf.template"
+HTPASSWD="/etc/nginx/htpasswd"
 
 if [ ! -d "/etc/nginx/http.d" ]; then
 	echo "Could not find http.d config dir, exiting!"
 	exit 1
 fi
+if [ ! -f "$CONFIG_TEMPLATE" ]; then
+	echo "Could not find config template $CONFIG_TEMPLATE, exiting!"
+	exit 2
+fi
 if [ ! -d "$MOUNTPOINT" ]; then
 	echo "Could not find data $MOUNTPOINT dir, exiting!"
-	exit 2
+	exit 3
 fi
 if [ ! -r "$MOUNTPOINT" ]; then
 	echo "Could not read-access data $MOUNTPOINT dir, exiting!"
-	exit 3
+	exit 4
 fi
 
-# Restore original config if it exists, or create backup to ensure idempotency
-if [ -f "$CONFIG_BACKUP" ]; then
-    cp "$CONFIG_BACKUP" "$CONFIG_FILE"
-else
-    cp "$CONFIG_FILE" "$CONFIG_BACKUP"
-fi
+# Regenerate the config from the immutable template on every start to stay idempotent
+cp "$CONFIG_TEMPLATE" "$CONFIG_FILE"
+
+USERNAME="${USERNAME:-}"
+PASSWORD="${PASSWORD:-}"
+USERNAME_FILE="${USERNAME_FILE:-}"
+PASSWORD_FILE="${PASSWORD_FILE:-}"
 
 if [ -n "$USERNAME_FILE" ] && [ -n "$PASSWORD_FILE" ]; then
 	if [ -r "$USERNAME_FILE" ] && [ -r "$PASSWORD_FILE" ]; then
 		echo "Username / password taken from files."
-		echo "$(cat "$USERNAME_FILE"):$(openssl passwd -5 -stdin < "$PASSWORD_FILE")" > /etc/nginx/htpasswd
+		USERNAME_CONTENT="$(cat "$USERNAME_FILE")"
+		PASSWORD_HASH="$(openssl passwd -6 -stdin < "$PASSWORD_FILE")"
+		printf '%s:%s\n' "$USERNAME_CONTENT" "$PASSWORD_HASH" > "$HTPASSWD"
 	else
 		echo "Files $USERNAME_FILE and/or $PASSWORD_FILE are not readable!"
-		exit 4
+		exit 5
 	fi
 elif [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 	echo "Username / password taken from env."
-	echo "$USERNAME:$(echo "$PASSWORD" | openssl passwd -5 -stdin)" > /etc/nginx/htpasswd
+	PASSWORD_HASH="$(printf '%s' "$PASSWORD" | openssl passwd -6 -stdin)"
+	printf '%s:%s\n' "$USERNAME" "$PASSWORD_HASH" > "$HTPASSWD"
 else
-    echo "Using no auth."
-	sed -i 's%auth_basic "Restricted";% %g' "$CONFIG_FILE"
-	sed -i 's%auth_basic_user_file /etc/nginx/htpasswd;% %g' "$CONFIG_FILE"
+	echo "Using no auth."
+	sed -i '/auth_basic/d' "$CONFIG_FILE"
 fi
+
+if [ -f "$HTPASSWD" ]; then
+	chown nginx:nginx "$HTPASSWD"
+	chmod 640 "$HTPASSWD"
+fi
+
+# Validate the generated config before starting nginx
+nginx -t
 
 exec "$@"
