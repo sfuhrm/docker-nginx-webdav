@@ -5,7 +5,7 @@ set -eu
 MOUNTPOINT="/media/data/"
 CONFIG_FILE="/etc/nginx/http.d/default.conf"
 CONFIG_TEMPLATE="/etc/nginx/http.d/default.conf.template"
-HTPASSWD="/etc/nginx/htpasswd"
+HTPASSWD="/var/lib/nginx/htpasswd"
 
 if [ ! -d "/etc/nginx/http.d" ]; then
 	echo "Could not find http.d config dir, exiting!"
@@ -52,8 +52,7 @@ else
 fi
 
 if [ -f "$HTPASSWD" ]; then
-	chown nginx:nginx "$HTPASSWD"
-	chmod 640 "$HTPASSWD"
+	chmod 600 "$HTPASSWD"
 fi
 
 # Validate the generated config before starting nginx

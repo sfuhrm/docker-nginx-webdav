@@ -23,7 +23,7 @@ jobs:
       - name: Run container
         run: |
           docker run -d --name webdav \
-            -p 8080:80 \
+            -p 8080:8080 \
             -e USERNAME=testuser \
             -e PASSWORD=testpassword \
             docker-nginx-webdav
@@ -96,7 +96,7 @@ jobs:
       - name: Run container
         run: |
           docker run -d --name webdav-file-auth \
-            -p 8081:80 \
+            -p 8081:8080 \
             -v $(pwd)/username.txt:/etc/webdav/username.txt \
             -v $(pwd)/password.txt:/etc/webdav/password.txt \
             -e USERNAME_FILE=/etc/webdav/username.txt \
@@ -147,7 +147,7 @@ jobs:
       - name: Run container without authentication
         run: |
           docker run -d --name webdav-no-auth \
-            -p 8082:80 \
+            -p 8082:8080 \
             docker-nginx-webdav
 
       - name: Wait for container to start
