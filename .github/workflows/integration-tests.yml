@@ -8,6 +8,7 @@ permissions:
     branches:
       - master
   pull_request:
+  workflow_dispatch:
   workflow_call:
 
 jobs:
