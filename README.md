@@ -1,7 +1,7 @@
 # Nginx WebDav Server (built from the Alpine image)
 
 [![Docker Image CI](https://github.com/sfuhrm/docker-nginx-webdav/actions/workflows/docker-image.yml/badge.svg)](https://github.com/sfuhrm/docker-nginx-webdav/actions/workflows/docker-image.yml)
-[![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)
+[![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav/latest)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
@@ -9,8 +9,8 @@ The [image](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav) is only around 
 
 > This is a fork of https://github.com/maltokyo/docker-nginx-webdav with the following changes:
 > * reducing the image layers and size (
-maltokyos image: [![Docker Image Size](https://img.shields.io/docker/image-size/maltokyo/docker-nginx-webdav)](https://hub.docker.com/r/maltokyo/docker-nginx-webdav),
-this image: [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)),
+maltokyos image: [![Docker Image Size](https://img.shields.io/docker/image-size/maltokyo/docker-nginx-webdav/latest)](https://hub.docker.com/r/maltokyo/docker-nginx-webdav),
+this image: [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav/latest)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)),
 > * filesystem secrets are never put in an environment variable,
 > * replacing the base Debian image with Alpine Linux,
 > * improving the entrypoint script,
