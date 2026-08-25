@@ -1,7 +1,9 @@
 # Nginx WebDav Server (built from the Alpine image)
 
 [![Docker Image CI](https://github.com/sfuhrm/docker-nginx-webdav/actions/workflows/docker-image.yml/badge.svg)](https://github.com/sfuhrm/docker-nginx-webdav/actions/workflows/docker-image.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/sfuhrm/docker-nginx-webdav)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)
 [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhrm/docker-nginx-webdav/latest)](https://hub.docker.com/r/sfuhrm/docker-nginx-webdav)
+[![GitHub release](https://img.shields.io/github/v/release/sfuhrm/docker-nginx-webdav)](https://github.com/sfuhrm/docker-nginx-webdav/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Incredibly secure, fast and light WebDav Server, built from Alpine image - bare minimum with no bells and whistles.
