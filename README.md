@@ -68,13 +68,6 @@ $ docker run --name webdav -p 8080:8080 -v /path/to/your/shared/files/:/media/da
 
 If you want to pass username and password in files like Docker secrets, you can define two environment variables: `$USERNAME_FILE` and `$PASSWORD_FILE`
 
-## Compression
-
-Set the `GZIP=1` environment variable to enable gzip compression for WebDAV responses (e.g. `PROPFIND`). Compression is disabled by default.
-```console
-$ docker run --name webdav -p 8080:8080 -v /path/to/your/shared/files/:/media/data -e GZIP=1 -d sfuhrm/docker-nginx-webdav
-```
-
 ## Docker compose
 
 Or use docker-compose example with secret
