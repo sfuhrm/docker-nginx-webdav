@@ -31,6 +31,7 @@ USERNAME="${USERNAME:-}"
 PASSWORD="${PASSWORD:-}"
 USERNAME_FILE="${USERNAME_FILE:-}"
 PASSWORD_FILE="${PASSWORD_FILE:-}"
+GZIP="${GZIP:-}"
 
 if [ -n "$USERNAME_FILE" ] && [ -n "$PASSWORD_FILE" ]; then
 	if [ -r "$USERNAME_FILE" ] && [ -r "$PASSWORD_FILE" ]; then
@@ -49,6 +50,10 @@ elif [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 else
 	echo "Using no auth."
 	sed -i '/auth_basic/d' "$CONFIG_FILE"
+fi
+
+if [ "$GZIP" != "1" ]; then
+	sed -i '/gzip/d' "$CONFIG_FILE"
 fi
 
 if [ -f "$HTPASSWD" ]; then

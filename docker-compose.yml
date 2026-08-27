@@ -10,3 +10,4 @@ services:
     environment:
       USERNAME: your_webdav_user
       PASSWORD: your_webdav_passwd
+      GZIP: 1

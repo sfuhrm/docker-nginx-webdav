@@ -173,3 +173,97 @@ jobs:
         run: |
           curl -s --fail -X DELETE http://localhost:8082/test-no-auth.txt \
             -w "%{http_code}" | grep 204
+
+  gzip_enabled_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Build Docker image
+        run: docker build -t docker-nginx-webdav .
+
+      - name: Run container with gzip enabled
+        run: |
+          docker run -d --name webdav-gzip \
+            -p 8083:8080 \
+            -e GZIP=1 \
+            -e USERNAME=testuser \
+            -e PASSWORD=testpassword \
+            docker-nginx-webdav
+
+      - name: Wait for container to start
+        run: |
+          echo "Waiting for container to start..."
+          sleep 10
+          docker ps
+
+      - name: Upload a file via WebDAV
+        run: |
+          echo "This is a test file for gzip." > test-gzip.txt
+          curl -s --fail -T test-gzip.txt -u testuser:testpassword \
+            http://localhost:8083/test-gzip.txt -w "%{http_code}" | grep 201
+
+      - name: "Test 1: PROPFIND response is gzip-compressed"
+        run: |
+          # With GZIP=1 and Accept-Encoding: gzip, the PROPFIND multistatus
+          # response must be compressed.
+          curl -s -X PROPFIND \
+            -H "Depth: 1" \
+            -H "Accept-Encoding: gzip" \
+            -u testuser:testpassword \
+            -D - -o /dev/null \
+            http://localhost:8083/ | grep -i "content-encoding: gzip"
+
+      - name: "Test 2: PROPFIND response is not gzip-compressed without Accept-Encoding"
+        run: |
+          # Without Accept-Encoding: gzip, the response must not be compressed.
+          if curl -s -X PROPFIND \
+            -H "Depth: 1" \
+            -u testuser:testpassword \
+            -D - -o /dev/null \
+            http://localhost:8083/ | grep -qi "content-encoding: gzip"; then
+            echo "Unexpected Content-Encoding: gzip" && exit 1
+          fi
+
+  gzip_disabled_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Build Docker image
+        run: docker build -t docker-nginx-webdav .
+
+      - name: Run container without GZIP
+        run: |
+          docker run -d --name webdav-no-gzip \
+            -p 8084:8080 \
+            -e USERNAME=testuser \
+            -e PASSWORD=testpassword \
+            docker-nginx-webdav
+
+      - name: Wait for container to start
+        run: |
+          echo "Waiting for container to start..."
+          sleep 10
+          docker ps
+
+      - name: Upload a file via WebDAV
+        run: |
+          echo "This is a test file for gzip disabled." > test-no-gzip.txt
+          curl -s --fail -T test-no-gzip.txt -u testuser:testpassword \
+            http://localhost:8084/test-no-gzip.txt -w "%{http_code}" | grep 201
+
+      - name: "Test 1: PROPFIND response is not gzip-compressed by default"
+        run: |
+          # Without the GZIP=1 env var, gzip is disabled, so even with
+          # Accept-Encoding: gzip the response must not be compressed.
+          if curl -s -X PROPFIND \
+            -H "Depth: 1" \
+            -H "Accept-Encoding: gzip" \
+            -u testuser:testpassword \
+            -D - -o /dev/null \
+            http://localhost:8084/ | grep -qi "content-encoding: gzip"; then
+            echo "Unexpected Content-Encoding: gzip" && exit 1
+          fi
