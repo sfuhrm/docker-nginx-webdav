@@ -1,0 +1,61 @@
+---
+name: Litmus WebDAV Tests
+permissions:
+  contents: read
+
+"on":
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  litmus_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Build Docker image
+        run: docker build -t docker-nginx-webdav .
+
+      - name: Run container
+        run: |
+          docker run -d --name webdav-litmus \
+            -p 8083:8080 \
+            -e USERNAME=litmus \
+            -e PASSWORD=litmus \
+            docker-nginx-webdav
+
+      - name: Wait for container to become healthy
+        run: |
+          echo "Waiting for container to become healthy..."
+          for i in $(seq 1 30); do
+            status="$(docker inspect -f '{{.State.Health.Status}}' webdav-litmus 2>/dev/null || echo starting)"
+            echo "Status: $status"
+            if [ "$status" = "healthy" ]; then
+              echo "Container is healthy."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Container did not become healthy in time."
+          docker logs webdav-litmus
+          exit 1
+
+      - name: Install litmus
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y litmus
+
+      - name: "Run litmus WebDAV protocol compliance tests"
+        run: |
+          # litmus is the WebDAV protocol compliance test suite. It is run
+          # against the running container to verify RFC2518/RFC4918 compliance.
+          #
+          # The image only enables PUT, DELETE, MKCOL, COPY and MOVE (via
+          # `dav_methods`) plus PROPFIND and OPTIONS (via `dav_ext_methods`).
+          # PROPPATCH, LOCK and UNLOCK are not supported, so the `props` and
+          # `locks` suites are excluded from this run.
+          TESTS="basic http copymove" litmus http://localhost:8083/ litmus litmus
