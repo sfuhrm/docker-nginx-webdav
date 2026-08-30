@@ -27,7 +27,7 @@ that is providing a basic
 functionality. There are integration test suites
 like ['litmus'](https://github.com/notroj/litmus) which show the lacking functionality
 of this module for advanced WebDav features.
-Please see [litmus report](LITMUS.md) for full
+Please see [litmus report](LITMUS.txt) for full
 details on the status.
 
 If you need a full litmus-compliant image, please see
