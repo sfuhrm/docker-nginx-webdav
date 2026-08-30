@@ -19,6 +19,20 @@ this image: [![Docker Image Size](https://img.shields.io/docker/image-size/sfuhr
 > * adding Github Actions build / push with automatic daily image building.
 > * Support for architectures linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/ppc64le,linux/s390x,linux/386,linux/riscv64
 
+## WebDav protocol compliance
+
+This image is based on nginx' `nginx-mod-http-dav-ext` 
+webdav module
+that is providing a basic
+functionality. There are integration test suites
+like ['litmus'](https://github.com/notroj/litmus) which show the lacking functionality
+of this module for advanced WebDav features.
+Please see [litmus report](LITMUS.md) for full
+details on the status.
+
+If you need a full litmus-compliant image, please see
+[docker-apache-webdav](https://github.com/sfuhrm/docker-apache-webdav).
+
 ## Docker tags
 
 Different tags mean different versions.
